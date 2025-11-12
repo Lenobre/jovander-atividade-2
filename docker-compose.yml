@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: app_pass
     volumes:
       - db_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Coloque sua inicialização de banco aqui
     networks:
       - app-network
     deploy:
@@ -32,19 +32,18 @@ services:
   apachephp:
     image: webdevops/php-apache:8.2
     volumes:
-      - ./app:/app
+      - ./app:/app  # Mapeamento dos arquivos da aplicação
     environment:
-      WEB_DOCUMENT_ROOT: /app
+      WEB_DOCUMENT_ROOT: /app  # Diretório da aplicação dentro do container
     ports:
-      - "8082:80"      # Alterado de 80:80 para 8082:80
-      - "443:443"
       - "8080:80"
+      - "443:443"
     networks:
       - app-network
     depends_on:
       - mariadb
     deploy:
-      replicas: 5
+      replicas: 5  # Definindo 5 réplicas para o Apache PHP
       update_config:
         parallelism: 1
         delay: 10s
@@ -60,7 +59,7 @@ services:
           - node.role == worker
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
     environment:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: root
@@ -71,7 +70,7 @@ services:
     depends_on:
       - mariadb
     deploy:
-      replicas: 1
+      replicas: 1  # 1 réplica do phpMyAdmin
       update_config:
         parallelism: 1
         delay: 10s
@@ -88,7 +87,8 @@ services:
 
 volumes:
   db_data:
+    driver: local  # Volume persistente para o banco de dados
 
 networks:
   app-network:
-    driver: overlay
+    driver: overlay  # Garantindo que a rede seja 'overlay' para o Swarm
