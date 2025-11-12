@@ -3,7 +3,6 @@ version: '3.8'
 services:
   mariadb:
     image: mariadb:11
-    container_name: mariadb
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: app_db
@@ -32,7 +31,6 @@ services:
 
   apachephp:
     image: webdevops/php-apache:8.2
-    container_name: apachephp
     volumes:
       - ./app:/app
     environment:
@@ -63,7 +61,6 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
     environment:
       PMA_HOST: mariadb
       MYSQL_ROOT_PASSWORD: root
